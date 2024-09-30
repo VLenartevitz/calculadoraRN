@@ -2,44 +2,44 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput } from 'react-native';
 
 const App = () => {
-  const [input1, setInput1] = useState('');
-  const [input2, setInput2] = useState('');
-  const [result, setResult] = useState('');
+  const [num1, setNum1] = useState('');
+  const [num2, setNum2] = useState('');
+  const [res, setRes] = useState('');
 
-  const calculate = (operation: string) => {
+  const calc = (op) => {
     try {
-      const num1 = parseFloat(input1);
-      const num2 = parseFloat(input2);
-      let evalResult = 0;
+      const n1 = parseFloat(num1);
+      const n2 = parseFloat(num2);
+      let result = 0;
 
-      switch (operation) {
+      switch (op) {
         case '+':
-          evalResult = num1 + num2;
+          result = n1 + n2;
           break;
         case '-':
-          evalResult = num1 - num2;
+          result = n1 - n2;
           break;
         case '*':
-          evalResult = num1 * num2;
+          result = n1 * n2;
           break;
         case '/':
-          evalResult = num1 / num2;
+          result = n1 / n2;
           break;
         default:
-          setResult('Operação inválida');
+          setRes('Inválido');
           return;
       }
 
-      setResult(evalResult.toString());
+      setRes(result.toString());
     } catch {
-      setResult('Erro: Entrada inválida');
+      setRes('Erro');
     }
   };
 
-  const clearInput = () => {
-    setInput1('');
-    setInput2('');
-    setResult('');
+  const clear = () => {
+    setNum1('');
+    setNum2('');
+    setRes('');
   };
 
   return (
@@ -49,25 +49,25 @@ const App = () => {
           style={styles.input}
           placeholder="Número 1"
           keyboardType="numeric"
-          value={input1}
-          onChangeText={setInput1}
+          value={num1}
+          onChangeText={setNum1}
         />
         <TextInput
           style={styles.input}
           placeholder="Número 2"
           keyboardType="numeric"
-          value={input2}
-          onChangeText={setInput2}
+          value={num2}
+          onChangeText={setNum2}
         />
-        <Text style={styles.resultText}>Resultado: {result}</Text>
+        <Text style={styles.resultText}>Resultado: {res}</Text>
       </View>
       <View style={styles.buttonContainer}>
-        {['+', '-', '*', '/'].map((operation) => (
-          <TouchableOpacity key={operation} style={styles.button} onPress={() => calculate(operation)}>
-            <Text style={styles.buttonText}>{operation}</Text>
+        {['+', '-', '*', '/'].map((op) => (
+          <TouchableOpacity key={op} style={styles.button} onPress={() => calc(op)}>
+            <Text style={styles.buttonText}>{op}</Text>
           </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.button} onPress={clearInput}>
+        <TouchableOpacity style={styles.button} onPress={clear}>
           <Text style={styles.buttonText}>C</Text>
         </TouchableOpacity>
       </View>
