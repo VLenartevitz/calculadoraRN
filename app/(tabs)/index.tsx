@@ -1,88 +1,139 @@
-import React, { useState } from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput } from 'react-native';
+import { useState } from 'react';
+import * as React from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Picker } from 'react-native';
 
 const App = () => {
-  const [num1, setNum1] = useState('');
-  const [num2, setNum2] = useState('');
-  const [res, setRes] = useState('');
+  const [firstValue, setFirstValue] = useState('');
+  const [secondValue, setSecondValue] = useState('');
+  const [operator, setOperator] = useState('+');
+  const [result, setResult] = useState('');
 
-  const calc = (op) => {
+  const calculateResult = () => {
     try {
-      const n1 = parseFloat(num1);
-      const n2 = parseFloat(num2);
-      let result = 0;
-
-      switch (op) {
+      let calcResult;
+      switch (operator) {
         case '+':
-          result = n1 + n2;
+          calcResult = parseFloat(firstValue) + parseFloat(secondValue);
           break;
         case '-':
-          result = n1 - n2;
+          calcResult = parseFloat(firstValue) - parseFloat(secondValue);
           break;
         case '*':
-          result = n1 * n2;
+          calcResult = parseFloat(firstValue) * parseFloat(secondValue);
           break;
         case '/':
-          result = n1 / n2;
+          calcResult = parseFloat(firstValue) / parseFloat(secondValue);
           break;
         default:
-          setRes('Inválido');
           return;
       }
-
-      setRes(result.toString());
-    } catch {
-      setRes('Erro');
+      setResult(String(calcResult));
+    } catch (error) {
+      setResult('Erro');
     }
   };
 
   const clear = () => {
-    setNum1('');
-    setNum2('');
-    setRes('');
+    setFirstValue('');
+    setSecondValue('');
+    setOperator('+');
+    setResult('');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.display}>
+    <View style={styles.container}>
+      <View style={styles.screen}>
         <TextInput
           style={styles.input}
-          placeholder="Número 1"
+          placeholder="Digite o primeiro valor"
           keyboardType="numeric"
-          value={num1}
-          onChangeText={setNum1}
+          value={firstValue}
+          onChangeText={setFirstValue}
         />
         <TextInput
           style={styles.input}
-          placeholder="Número 2"
+          placeholder="Digite o segundo valor"
           keyboardType="numeric"
-          value={num2}
-          onChangeText={setNum2}
+          value={secondValue}
+          onChangeText={setSecondValue}
         />
-        <Text style={styles.resultText}>Resultado: {res}</Text>
+        <Picker
+          selectedValue={operator}
+          style={styles.picker}
+          onValueChange={(itemValue) => setOperator(itemValue)}
+        >
+          <Picker.Item label="+" value="+" />
+          <Picker.Item label="-" value="-" />
+          <Picker.Item label="*" value="*" />
+          <Picker.Item label="/" value="/" />
+        </Picker>
+        <Text style={styles.result}>Resultado: {result}</Text>
       </View>
-      <View style={styles.buttonContainer}>
-        {['+', '-', '*', '/'].map((op) => (
-          <TouchableOpacity key={op} style={styles.button} onPress={() => calc(op)}>
-            <Text style={styles.buttonText}>{op}</Text>
-          </TouchableOpacity>
-        ))}
+
+      <View style={styles.buttons}>
+        <TouchableOpacity style={styles.button} onPress={calculateResult}>
+          <Text style={styles.buttonText}>=</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={clear}>
           <Text style={styles.buttonText}>C</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
+const { width, height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f0f0' },
-  display: { width: '90%', backgroundColor: '#fff', padding: 20, borderRadius: 10, marginBottom: 20, alignItems: 'center' },
-  input: { width: '80%', fontSize: 24, padding: 10, marginVertical: 10, borderBottomWidth: 1, borderBottomColor: '#333', textAlign: 'center' },
-  resultText: { fontSize: 24, color: '#007bff', marginTop: 20 },
-  buttonContainer: { flexDirection: 'row', flexWrap: 'wrap', width: '80%', justifyContent: 'space-around' },
-  button: { backgroundColor: '#007bff', padding: 15, borderRadius: 10, margin: 5, alignItems: 'center' },
-  buttonText: { color: '#fff', fontSize: 24 },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
+  screen: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 2,
+    marginBottom: 20,
+  },
+  input: {
+    height: 50,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 10,
+    paddingLeft: 10,
+    fontSize: 18,
+  },
+  picker: {
+    height: 50,
+    marginBottom: 10,
+  },
+  result: {
+    fontSize: 24,
+    textAlign: 'center',
+    marginTop: 10,
+    color: '#333',
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  button: {
+    flex: 1,
+    margin: 5,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#007AFF',
+    borderRadius: 10,
+  },
+  buttonText: {
+    fontSize: 24,
+    color: '#fff',
+  },
 });
 
 export default App;
